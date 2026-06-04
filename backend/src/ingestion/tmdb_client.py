@@ -1,0 +1,42 @@
+import os 
+import dotenv
+import requests
+
+dotenv.load_dotenv()
+
+# 1(os.environ.get('TMDB_API', 0))
+
+class TMDBClient:
+    def __init__(self, api_key: str, base_url: str):
+        self.api_key = api_key
+        self.base_url = base_url
+
+    def init_client(self, endpoint: str):
+        url = f"{self.base_url}/{endpoint}"
+        try:
+            response = requests.get(url=url,
+                                    params={'api_key': self.api_key,
+                                            'page':1})
+            
+            response.raise_for_status() 
+            return response.text
+
+        except Exception as e:
+            print("got execption while running init_client", e)
+        
+
+
+if __name__ == "__main__":
+    client = TMDBClient(api_key=os.environ.get("TMDB_API_KEY"), base_url=os.environ.get("BASE_URL"))
+    resp = client.init_client(endpoint='discover/movie')
+    print(resp)
+
+
+
+
+
+
+        
+    
+
+
